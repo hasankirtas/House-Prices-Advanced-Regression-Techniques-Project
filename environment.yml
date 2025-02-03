@@ -1,0 +1,23 @@
+name: house_prices_regression
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.9
+  - pandas
+  - numpy
+  - scikit-learn
+  - scipy
+  - matplotlib
+  - seaborn
+  - tqdm
+  - joblib
+  - xgboost
+  - lightgbm
+  - catboost
+  - tpot
+  - jupyter
+  - ipykernel
+  - pip
+  - pip:
+      - missingno
