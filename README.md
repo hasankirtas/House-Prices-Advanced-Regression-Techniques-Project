@@ -135,7 +135,7 @@ To set up the project environment:
 Using Conda:
 ```bash
 conda env create -f environment.yml
-conda activate your_project_name
+conda activate House-Prices-Advanced-Regression-Techniques-Project
 ```
 
 Using Pip:
