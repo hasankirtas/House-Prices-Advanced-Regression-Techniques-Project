@@ -127,6 +127,8 @@ Project/
 ├── README.md
 ├── environment.yml
 ├── requirements.txt
+```
+
 ---
 
 ### Installation
