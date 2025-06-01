@@ -31,37 +31,40 @@ This project aims to build a machine learning model that predicts house prices b
 
 ---
 
-#### **2. Feature Engineering**
+### **2. Feature Engineering**
+---
+Various feature engineering techniques were applied to enhance the model's predictive power, focusing on imputation, categorical to numerical conversions, new feature creation, and removal of redundant or less impactful features.
 
-Various feature engineering techniques were applied to enhance the model's predictive power:
+#### **Missing Value Imputation and Categorical to Numeric Conversion**
 
-1. **Average Price Calculation**
-   - `Neighborhood_avg_price`: The average house sale price for each neighborhood was calculated and added to the test data to capture neighborhood-specific pricing trends.
+* **Strategic Imputation:** Missing values in various columns were handled using custom transformers:
+    * `LotFrontage` was imputed with the **median `LotFrontage` for each `Neighborhood`**.
+    * Garage-related columns (`GarageType`, `GarageFinish`, `GarageQual`, `GarageCond`) had their missing values filled with **'None'**, and `GarageYrBlt` was filled with **0**.
+    * Basement-related columns (`BsmtQual`, `BsmtCond`, `BsmtExposure`, `BsmtFinType1`, `BsmtFinType2`) were imputed with **'None'**.
+    * `PoolQC`, `MiscFeature`, `Alley`, `Fence`, and `FireplaceQu` were also filled with **'None'**.
+    * `MasVnrType` and `Electrical` were imputed with their **most frequent values**.
+    * `MasVnrArea` missing values were filled with **0**.
+* **Extensive Categorical Mapping:** A `QualMappingTransformer` was implemented to convert a wide range of categorical features into numerical representations based on predefined mappings, reflecting ordinal relationships where applicable. This included:
+    * Quality-related columns (e.g., `ExterQual`, `BsmtQual`, `FireplaceQu`, `KitchenQual`) mapped to numerical scores (e.g., 'None': 0, 'Po': 1, 'Ex': 5).
+    * Specific categorical features like `MSZoning`, `Street`, `Alley`, `LotShape`, `LandContour`, `Utilities`, `LotConfig`, `LandSlope`, `BsmtExposure`, `BsmtFinType1`, `BsmtFinType2`, `CentralAir`, `Fence`, `MasVnrType`, `Functional`, `PavedDrive`, `GarageType`, `SaleType`, `SaleCondition`, `Heating`, `MiscFeature`, `GarageFinish`, and `Electrical` were also mapped to numerical values.
+    * `MiscVal` was binned into numerical categories (0, 1, 2, 3) based on its value range.
 
-2. **Categorical Variable Conversion to Numeric**
-   - `GarageType_num`: The categorical variable `GarageType` was transformed into numeric values.
-   - `GarageFinish_num`: The categorical variable `GarageFinish` was transformed into numeric values.
-   - `BsmtExposure_Score`: The categorical variable `BsmtExposure` was transformed into numeric values.
+#### **New Feature Creation**
 
-3. **Missing Value Imputation**
-   - `GarageYrBlt`: Missing values were imputed with 0 to represent houses with no garage year information.
-   - `GarageType_num`, `GarageFinish_num`, `Garage_Feature`, `Living_Area_per_Room`, `Garage_Capacity_per_Square_Meter`: Missing values in these columns were imputed with the respective column's mean value.
+* `TotalFinishedBsmtSF`: Calculated as the sum of `BsmtFinSF1` and `BsmtFinSF2`.
+* `TotalFinishedBsmtSF_BsmtQual_Interaction`: An interaction term created by multiplying `TotalFinishedBsmtSF` with the **numerical `BsmtQual` score**.
+* `TotalFullBaths`: Sum of `BsmtFullBath` and `FullBath`.
+* `TotalHalfBaths`: Sum of `BsmtHalfBath` and `HalfBath`.
+* `HouseAge`: Calculated as `YrSold` - `YearBuilt`.
+* `YearsSinceRemodel`: Calculated as `YrSold` - `YearRemodAdd`, ensuring **non-negative values**.
+* `TotalPorchArea`: Sum of `WoodDeckSF`, `OpenPorchSF`, `EnclosedPorch`, `3SsnPorch`, and `ScreenPorch`.
 
-4. **New Feature Creation**
-   - `Garage_Feature`: A new feature was created by weighting different garage-related characteristics (such as vehicle capacity, area, finish status, and year built).
-   - `Living_Area_per_Room`: The total living area was divided by the total number of rooms to create a new feature representing the average living area per room.
-   - `Garage_Capacity_per_Square_Meter`: The garage capacity was divided by the garage area to create a new feature representing garage capacity per square meter.
-   - `GrLivArea_per_Room`: The total living area was divided by the total number of rooms to create a feature representing the average living area per room.
-   - `MasVnr_Area_to_TotalArea`: The ratio of masonry veneer area to total area was calculated to understand the proportion of masonry in the house.
-   - `Age_at_Remodel`: The age of the house at the time of remodeling was calculated to capture how old the house was when it was last renovated.
-   - `BsmtFinSF_to_TotalArea`: The ratio of finished basement area to total area was calculated to determine the impact of basement space on overall area.
-   - `Lot_Frontage_to_Area`: The ratio of lot frontage to total area was calculated to understand the proportion of the lot's frontage in relation to its total area.
-   - `TotalOutdoorArea`: A new feature was created by summing all outdoor areas (such as terrace, second floor, porch) to capture the total outdoor space available.
-   - `Overall_Quality`: The sum of various quality attributes of the house was used to create a general quality score for each property.
-   - `FullBath_to_Bedrooms`: The ratio of full bathrooms to bedrooms was calculated to measure the balance between bathrooms and bedrooms.
-   - `Fireplace_Impact`: The number of fireplaces and the quality score of each fireplace were multiplied to calculate the overall impact of fireplaces on the property.
-   - `BsmtQual_to_BsmtFinSF`: The basement quality score was multiplied by the finished basement area to create a feature representing the overall basement quality and finish.
-   - `Overall_Quality_Impact`: The general quality score of the house was multiplied by the living area to create a new feature representing the combined impact of the house's quality and size.
+#### **Feature Dropping**
+
+To reduce redundancy and simplify the model, several original features were dropped after their information was incorporated into new, engineered features. These include:
+
+* **Original component features:** `BsmtFinSF1`, `BsmtFinSF2`, `BsmtFullBath`, `FullBath`, `BsmtHalfBath`, `HalfBath`, `YearBuilt`, `YearRemodAdd`, `WoodDeckSF`, `OpenPorchSF`, `EnclosedPorch`, `3SsnPorch`, `ScreenPorch`.
+* **Features with weak correlation** to the target variable: `Condition1`, `Condition2`, `BldgType`, `HouseStyle`, `RoofStyle`, `RoofMatl`, `Exterior1st`, `Exterior2nd`, `Foundation`.
 
 #### **3. Model Development**
 - **TPOT**: The Stacked model was built using the TPOT technology, which automates the process of stacking and provides an optimized ensemble model.
@@ -109,41 +112,6 @@ Various feature engineering techniques were applied to enhance the model's predi
   - scikit-learn (Modeling and evaluation)
   - TPOT (Automated machine learning and stacking)
   - matplotlib, seaborn (Visualization)
-
-### File Structure
-```plaintext
-Project/
-├── data/
-│   ├── raw/
-│   ├── processed/
-├── notebooks/
-│   ├── exploratory_data_analysis.ipynb
-│   ├── model_training.ipynb
-│   ├── test_data_processing.ipynb
-│   ├── Final_Test_Predictions.ipynb
-├── src/
-│   ├── data_preprocessing.py
-├── reports/
-├── README.md
-├── environment.yml
-├── requirements.txt
-```
-
----
-
-### Installation
-To set up the project environment:
-
-Using Conda:
-```bash
-conda env create -f environment.yml
-conda activate House-Prices-Advanced-Regression-Techniques-Project
-```
-
-Using Pip:
-```bash
-pip install -r requirements.txt
-```
 
 ---
 
