@@ -44,6 +44,7 @@ Various feature engineering techniques were applied to enhance the model's predi
     * `PoolQC`, `MiscFeature`, `Alley`, `Fence`, and `FireplaceQu` were also filled with **'None'**.
     * `MasVnrType` and `Electrical` were imputed with their **most frequent values**.
     * `MasVnrArea` missing values were filled with **0**.
+
 * **Extensive Categorical Mapping:** A `QualMappingTransformer` was implemented to convert a wide range of categorical features into numerical representations based on predefined mappings, reflecting ordinal relationships where applicable. This included:
     * Quality-related columns (e.g., `ExterQual`, `BsmtQual`, `FireplaceQu`, `KitchenQual`) mapped to numerical scores (e.g., 'None': 0, 'Po': 1, 'Ex': 5).
     * Specific categorical features like `MSZoning`, `Street`, `Alley`, `LotShape`, `LandContour`, `Utilities`, `LotConfig`, `LandSlope`, `BsmtExposure`, `BsmtFinType1`, `BsmtFinType2`, `CentralAir`, `Fence`, `MasVnrType`, `Functional`, `PavedDrive`, `GarageType`, `SaleType`, `SaleCondition`, `Heating`, `MiscFeature`, `GarageFinish`, and `Electrical` were also mapped to numerical values.
