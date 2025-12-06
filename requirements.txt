@@ -13,3 +13,7 @@ tpot==0.12.2
 jupyter==latest
 ipykernel==6.28.0
 missingno==0.5.2
+optuna>=3.0.0
+sweetviz>=2.1.0
+statsmodels>=0.14.0
+pyyaml>=6.0

@@ -12,9 +12,9 @@ env/
 .venv/
 .env/
 
-# Conda environments
-*.yml
-*.yaml
+# Conda environments (but keep config.yaml)
+# *.yml
+# *.yaml
 
 # IDE configurations
 .vscode/
@@ -44,6 +44,9 @@ models/
 
 # Reports
 reports/
+
+# Submission files
+submission/
 
 # Generated files
 *.html

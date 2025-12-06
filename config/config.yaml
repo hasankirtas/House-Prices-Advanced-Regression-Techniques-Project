@@ -1,0 +1,117 @@
+# House Prices Prediction Project Configuration
+
+# Data paths
+data:
+  raw:
+    train: "data/Raw/train.csv"
+    test: "data/Raw/test.csv"
+    sample_submission: "data/Raw/sample_submission.csv"
+  processed:
+    train: "data/Processed/processed_train_data.csv"
+    test: "data/Processed/processed_test_data.csv"
+
+# Model paths
+models:
+  xgb: "models/xgb_model_final.joblib"
+  tpot: "models/tpot_model_final.joblib"
+  neighborhood_encoding: "models/neighborhood_encoding.csv"
+
+# Submission path
+submission:
+  output: "submission/test_predictions.csv"
+
+# Reports path
+reports:
+  sweetviz_train: "reports/sweetviz_eda_report.html"
+  sweetviz_processed: "reports/processed_train_data_sweetviz_eda_report.html"
+
+# Random seed for reproducibility
+random_state: 42
+
+# Train-test split
+train_test_split:
+  test_size: 0.2
+  random_state: 42
+
+# Cross-validation
+cross_validation:
+  n_splits: 10
+  shuffle: true
+  random_state: 42
+
+# Outlier detection
+outlier:
+  method: "zscore"  # "zscore" or "iqr"
+  threshold: 3.0  # for zscore
+  iqr_factor: 1.5  # for iqr
+
+# Target encoding
+target_encoding:
+  alpha: 10  # smoothing parameter for neighborhood encoding
+
+# Feature engineering
+feature_engineering:
+  include_bsmt_quality_interaction: true
+
+# Features to drop
+features_to_drop:
+  original_components:
+    - "BsmtFinSF1"
+    - "BsmtFinSF2"
+    - "BsmtFullBath"
+    - "FullBath"
+    - "BsmtHalfBath"
+    - "HalfBath"
+    - "YearBuilt"
+    - "YearRemodAdd"
+    - "WoodDeckSF"
+    - "OpenPorchSF"
+    - "EnclosedPorch"
+    - "3SsnPorch"
+    - "ScreenPorch"
+  weakly_related:
+    - "Condition1"
+    - "Condition2"
+    - "BldgType"
+    - "HouseStyle"
+    - "RoofStyle"
+    - "RoofMatl"
+    - "Exterior1st"
+    - "Exterior2nd"
+    - "Foundation"
+
+# XGBoost hyperparameters
+xgb:
+  n_estimators: 1248
+  learning_rate: 0.05499096292974256
+  max_depth: 4
+  subsample: 0.577013993087534
+  colsample_bytree: 0.9068997064085227
+  gamma: 0.0004916084930462287
+  reg_alpha: 1.0951310305247596e-05
+  reg_lambda: 0.03878934490687091
+  random_state: 42
+  verbosity: 0
+
+# TPOT hyperparameters
+tpot:
+  generations: 10
+  population_size: 50
+  verbosity: 2
+  scoring: "neg_mean_squared_error"
+  random_state: 42
+  n_jobs: -1
+  max_time_mins: 30
+
+# Optuna hyperparameter tuning
+optuna:
+  n_trials: 50
+  cv_folds: 5
+  direction: "minimize"
+
+# Logging
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/training.log"
+
